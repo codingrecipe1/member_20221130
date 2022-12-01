@@ -62,4 +62,45 @@ public class MemberTest {
         assertThat(loginResult).isNotNull();
     }
 
+    @Test
+    @Transactional
+    @Rollback(value = true)
+    @DisplayName("회원 수정 테스트")
+    public void updateTest() {
+        MemberDTO memberDTO = newMember();
+        Long savedId = memberService.save(memberDTO);
+
+        // 수정용 MemberDTO
+        memberDTO.setId(savedId);
+        memberDTO.setMemberName("수정 이름");
+
+        // 수정처리
+        memberService.update(memberDTO);
+
+        // DB에서 조회한 이름이 수정할 때 사용한 이름과 같은지 확인
+        MemberDTO memberDB = memberService.findById(savedId);
+        assertThat(memberDB.getMemberName()).isEqualTo(memberDTO.getMemberName());
+    }
+
+    @Test
+    @Transactional
+    @Rollback(value = true)
+    @DisplayName("회원 삭제 테스트")
+    public void deleteTest() {
+        MemberDTO memberDTO = newMember();
+        Long savedId = memberService.save(memberDTO);
+        memberService.delete(savedId);
+        assertThat(memberService.findById(savedId)).isNull();
+    }
+
+    public MemberDTO newMember() {
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMemberEmail("testEmail");
+        memberDTO.setMemberPassword("testPassword");
+        memberDTO.setMemberName("testName");
+        memberDTO.setMemberAge(22);
+        memberDTO.setMemberPhone("010-1111-1111");
+        return memberDTO;
+    }
+
 }
