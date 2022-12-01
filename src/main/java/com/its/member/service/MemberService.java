@@ -6,6 +6,8 @@ import com.its.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -25,5 +27,18 @@ public class MemberService {
             로그인 성공, 실패 여부를 리턴.
             단, email 조회결과가 없을 때도 실패
          */
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberDTO.getMemberEmail());
+        if (optionalMemberEntity.isPresent()) {
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            if (memberEntity.getMemberPassword().equals(memberDTO.getMemberPassword())) {
+//                MemberDTO memberDTO1 = MemberDTO.toDTO(memberEntity);
+//                return memberDTO1;
+                return MemberDTO.toDTO(memberEntity);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 }
