@@ -3,6 +3,7 @@ package com.its.member;
 import com.its.member.dto.MemberDTO;
 import com.its.member.service.MemberService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,13 +32,34 @@ public class MemberTest {
         memberDTO.setMemberName("testName");
         memberDTO.setMemberAge(22);
         memberDTO.setMemberPhone("010-1111-1111");
-
         Long saveId = memberService.save(memberDTO);
-
         MemberDTO savedMember = memberService.findById(saveId);
-
         assertThat(memberDTO.getMemberEmail()).isEqualTo(savedMember.getMemberEmail());
 //        assertThat(memberDTO.getMemberEmail()).isEqualTo("tttttt");
-
     }
+
+    @Test
+    @Transactional
+    @Rollback(value = true)
+    @DisplayName("로그인 테스트")
+    public void loginTest() {
+        String loginEmail = "loginEmail";
+        String loginPassword = "loginPassword";
+        // 1. 회원가입
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMemberEmail(loginEmail);
+        memberDTO.setMemberPassword(loginPassword);
+        memberDTO.setMemberName("loginName");
+        memberDTO.setMemberAge(22);
+        memberDTO.setMemberPhone("010-1111-1111");
+        memberService.save(memberDTO);
+        // 2. 로그인 수행
+        MemberDTO loginDTO = new MemberDTO();
+        loginDTO.setMemberEmail(loginEmail);
+        loginDTO.setMemberPassword(loginPassword);
+        MemberDTO loginResult = memberService.login(loginDTO);
+        // 3. 로그인 결과가 null 이 아니면 테스트 통과
+        assertThat(loginResult).isNotNull();
+    }
+
 }
