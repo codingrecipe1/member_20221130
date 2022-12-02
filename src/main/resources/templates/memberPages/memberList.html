@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>list</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 </head>
 <body>
@@ -31,8 +32,56 @@
                 <td>
                     <a th:href="@{|/member/delete/${member.id}|}">삭제</a>
                 </td>
+                <td>
+                    <button class="btn btn-primary" th:onclick="findMember([[${member.id}]])">조회</button>
+                </td>
             </tr>
         </table>
     </div>
+    <div id="detail-area">
+
+    </div>
 </body>
+<script th:inline="javascript">
+    const findMember = (findId) => {
+        console.log("id값", findId);
+        const detailArea = document.getElementById("detail-area");
+        axios({
+            method: "get",
+            url: "/member/ajax/"+findId,
+        }).then(res => {
+            console.log("then", res);
+            console.log("회원객체", res.data);
+            console.log("회원이메일", res.data.memberEmail);
+            const member = res.data;
+            console.log("member", member);
+            let result =
+                "        <table class=\"table table-striped\">\n" +
+                "            <tr>\n" +
+                "                <th>id</th>\n" +
+                "                <td>"+ member.id +"</td>\n" +
+                "            </tr>\n" +
+                "            <tr>\n" +
+                "                <th>email</th>\n" +
+                "                <td>" + member.memberEmail + "</td>\n" +
+                "            </tr>\n" +
+                "            <tr>\n" +
+                "                <th>password</th>\n" +
+                "                <td>" + member.memberPassword + "</td>\n" +
+                "            </tr>\n" +
+                "            <tr>\n" +
+                "                <th>name</th>\n" +
+                "                <td> " + member.memberName + "</td>\n" +
+                "            </tr>\n" +
+                "            <tr>\n" +
+                "                <th>age</th>\n" +
+                "                <td>" + member.memberAge + "</td>\n" +
+                "            </tr>\n" +
+                "        </table>";
+            detailArea.innerHTML = result;
+        }).catch(err => {
+            console.log("catch", err);
+        })
+    }
+</script>
 </html>
