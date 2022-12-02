@@ -4,6 +4,8 @@ import com.its.member.dto.MemberDTO;
 import com.its.member.service.MemberService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -76,6 +78,18 @@ public class MemberController {
     public String delete(@PathVariable Long id) {
         memberService.delete(id);
         return "redirect:/member/";
+    }
+
+    @PostMapping("/dup-check")
+//    public @ResponseBody String emailDuplicateCheck(@RequestParam("inputEmail") String memberEmail) {
+    public ResponseEntity emailDuplicateCheck(@RequestParam("inputEmail") String memberEmail) {
+        String checkResult = memberService.emailDuplicateCheck(memberEmail);
+//        return checkResult;
+        if (checkResult != null) {
+            return new ResponseEntity<>("사용해도 됩니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("사용할 수 없습니다.", HttpStatus.CONFLICT);
+        }
     }
 
 }

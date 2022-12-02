@@ -86,6 +86,15 @@ public class MemberService {
     public void delete(Long id) {
         memberRepository.deleteById(id);
     }
+
+    public String emailDuplicateCheck(String memberEmail) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
+        if (optionalMemberEntity.isEmpty()) {
+            return "ok";
+        } else {
+            return null;
+        }
+    }
 }
 
 
