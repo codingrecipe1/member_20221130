@@ -19,6 +19,7 @@
                 <th>조회</th>
                 <th>삭제</th>
                 <th>조회(ajax)</th>
+                <th>삭제(axios)</th>
             </tr>
             <tr th:each="member: ${memberList}">
                 <td th:text="${member.id}"></td>
@@ -35,6 +36,9 @@
                 <td>
                     <button class="btn btn-primary" th:onclick="findMember([[${member.id}]])">조회</button>
                 </td>
+                <td>
+                    <button class="btn btn-primary" th:onclick="deleteMember([[${member.id}]])">삭제</button>
+                </td>
             </tr>
         </table>
     </div>
@@ -43,6 +47,17 @@
     </div>
 </body>
 <script th:inline="javascript">
+    const deleteMember = (deleteId) => {
+        axios({
+            method: "delete",
+            url: "/member/" + deleteId
+        }).then(res => {
+            alert("삭제 성공");
+            location.href = "/member/";
+        }).catch(res => {
+            alert("삭제 실패");
+        })
+    }
     const findMember = (findId) => {
         console.log("id값", findId);
         const detailArea = document.getElementById("detail-area");

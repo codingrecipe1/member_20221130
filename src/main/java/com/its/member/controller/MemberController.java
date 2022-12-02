@@ -103,6 +103,28 @@ public class MemberController {
         }
     }
 
+    /*
+        get: /member/{id}
+        post: /member/{id}
+        delete: /member/{id}
+        put: /member/{id}
+     */
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteByAxios(@PathVariable Long id) {
+        System.out.println("id = " + id);
+        memberService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity updateByAxios(@PathVariable Long id,
+                                        @RequestBody MemberDTO memberDTO) {
+        System.out.println("id = " + id + ", memberDTO = " + memberDTO);
+        memberService.update(memberDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
 
 

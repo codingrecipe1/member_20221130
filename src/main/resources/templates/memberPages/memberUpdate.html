@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>update</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <style>
         #update-form {
@@ -21,10 +22,50 @@
         age: <input type="text" name="memberAge" th:value="${member.memberAge}" class="form-control">
         phone: <input type="text" name="memberPhone" th:value="${member.memberPhone}" class="form-control">
         <input type="button" value="수정" class="btn btn-warning" onclick="update()">
+        <input type="button" value="수정(axios)" class="btn btn-warning" onclick="updateAxios()">
     </form>
 </div>
 </body>
 <script th:inline="javascript">
+    const updateAxios = () => {
+        // const id = document.getElementsByName("id")[0].value;
+        // const email = document.getElementsByName("memberEmail")[0].value;
+        const id = document.querySelector('input[name="id"]').value; // querySelect 사용
+        const email = document.querySelector('input[name="memberEmail"]').value; // querySelect 사용
+        const password = document.getElementsByName("memberPassword")[0].value;
+        const name = document.getElementsByName("memberName")[0].value;
+        const age = document.getElementsByName("memberAge")[0].value;
+        const phone = document.getElementsByName("memberPhone")[0].value;
+        // const ids = document.getElementsByName("id");
+        // console.log("id", id);
+        console.log("id1", id);
+        // console.log("ids", ids);
+        const passwordDB = [[${member.memberPassword}]];
+        if (password == passwordDB) {
+            axios({
+                method: "put",
+                url: "/member/"+id,
+                data: {
+                    id: id,
+                    memberEmail: email,
+                    memberPassword: password,
+                    memberName: name,
+                    memberAge: age,
+                    memberPhone: phone
+                }
+            }).then(res => {
+                console.log("수정 성공");
+                location.href = "/member/"+id;
+            }).catch(err => {
+                console.log("수정 실패");
+            })
+        } else {
+            alert("비밀번호가 틀립니다!");
+        }
+
+
+    }
+
     const update = () => {
         const passwordDB = [[${member.memberPassword}]];
         const passwordInput = document.getElementById("memberPassword").value;
